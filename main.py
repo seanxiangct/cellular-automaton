@@ -21,12 +21,12 @@ rule = []
 initial_state = [random.randint(0, 1) for x in range(n_cols)]
 
 # 2D matrix of cells
-grid = np.zeros((n_rows, n_cols))
+grid = []
 
 
 class Cell:
 
-    def __init__(self, x, y, state):
+    def __init__(self, x, y, state=1):
         self.x = x
         self.y = y
         self.state = state
@@ -45,6 +45,7 @@ def draw_grid():
     y_cor = 0
     for j in range(n_cols):
         for i in range(n_rows):
+            cell = pygame.Rect(x_cor + i * cell_size, y_cor + j * cell_size, cell_size, cell_size)
             pygame.draw.rect(win, black_clr, (x_cor + i * cell_size, y_cor + j * cell_size, cell_size, cell_size), 1)
 
 
@@ -88,7 +89,7 @@ def run():
                 mouse_x, mouse_y = pygame.mouse.get_pos()
                 if keys[pygame.K_SPACE]:
                     # pygame.draw.circle(win, red_clr, (mouse_x, mouse_y), 3)
-                    draw_cell(Cell(mouse_x, mouse_y, 1))
+                    draw_cell(Cell(mouse_x, mouse_y))
 
         pygame.display.update()
 
