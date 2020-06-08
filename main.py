@@ -33,7 +33,9 @@ class Cell:
 
 def draw_cell(cell):
     if cell.state:
-        pygame.draw.rect(win, white_clr, (cell.x, cell.y, cell_size, cell_size))
+        x_cor = cell.x - cell_size // 2
+        y_cor = cell.y - cell_size // 2
+        pygame.draw.rect(win, white_clr, (x_cor, y_cor, cell_size, cell_size))
 
 
 def draw_row():
@@ -58,10 +60,15 @@ def init():
 def run():
 
     while run:
+
+        # if key is held down
+        keys = pygame.key.get_pressed()
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
 
+            # if key is pressed
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     # exit
@@ -69,7 +76,9 @@ def run():
 
             if pygame.mouse.get_focused():
                 mouse_x, mouse_y = pygame.mouse.get_pos()
-                pygame.draw.circle(win, red_clr, (mouse_x, mouse_y), 3)
+                if keys[pygame.K_SPACE]:
+                    # pygame.draw.circle(win, red_clr, (mouse_x, mouse_y), 3)
+                    draw_cell(Cell(mouse_x, mouse_y, 1))
 
         pygame.display.update()
 
