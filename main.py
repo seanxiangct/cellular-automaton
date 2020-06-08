@@ -1,9 +1,10 @@
 import pygame
 import random
+import numpy as np
 
 # config
-s_width, s_height = 600, 600
-cell_size = 5
+s_width, s_height = 800, 800
+cell_size = 10
 
 # colours
 red_clr = (255, 0, 0)
@@ -20,7 +21,7 @@ rule = []
 initial_state = [random.randint(0, 1) for x in range(n_cols)]
 
 # 2D matrix of cells
-grid = []
+grid = np.zeros((n_rows, n_cols))
 
 
 class Cell:
@@ -35,15 +36,20 @@ def draw_cell(cell):
     if cell.state:
         x_cor = cell.x - cell_size // 2
         y_cor = cell.y - cell_size // 2
-        pygame.draw.rect(win, white_clr, (x_cor, y_cor, cell_size, cell_size))
-
-
-def draw_row():
-    row = []
+        pygame.draw.rect(win, black_clr, (x_cor, y_cor, cell_size, cell_size))
 
 
 def draw_grid():
-    pass
+
+    x_cor = 0
+    y_cor = 0
+    for j in range(n_cols):
+        for i in range(n_rows):
+            pygame.draw.rect(win, black_clr, (x_cor + i * cell_size, y_cor + j * cell_size, cell_size, cell_size), 1)
+
+
+def test():
+    pygame.draw.rect(win, black_clr, (0, 0, cell_size, cell_size), 1)
 
 
 def init():
@@ -54,7 +60,9 @@ def init():
 
     # create cells based on initial state
 
-    win.fill(black_clr)
+    win.fill(white_clr)
+
+    draw_grid()
 
 
 def run():
@@ -63,6 +71,8 @@ def run():
 
         # if key is held down
         keys = pygame.key.get_pressed()
+        if keys[pygame.K_t]:
+            test()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
