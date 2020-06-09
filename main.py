@@ -1,6 +1,6 @@
 import pygame
 import random
-import numpy as np
+import utils
 
 # config
 s_width, s_height = 800, 800
@@ -24,20 +24,27 @@ initial_state = [random.randint(0, 1) for x in range(n_cols)]
 grid = []
 
 
-class Cell:
+class Cell(pygame.Rect):
 
     def __init__(self, x, y, state=1):
+        super(Cell, self).__init__(x, y, cell_size, cell_size)
         self.x = x
         self.y = y
         self.state = state
 
 
-def draw_cell(cell):
-    if cell.state:
-        x_cor = cell.x - cell_size // 2
-        y_cor = cell.y - cell_size // 2
-        # find the nearest cell on the grid
-        pygame.draw.rect(win, black_clr, (x_cor, y_cor, cell_size, cell_size))
+class Point:
+
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+
+def activate_cell(pix_x, pix_y):
+    # find the nearest cell on the grid
+    # pygame.draw.rect(win, black_clr, (x_cor, y_cor, cell_size, cell_size))
+    in_rect = utils.binary_search_2d(Point(pix_x, pix_y), grid)
+    pygame.draw.rect(win, black_clr, in_rect)
 
 
 def draw_grid():
@@ -47,14 +54,14 @@ def draw_grid():
     for j in range(n_cols):
         row = []
         for i in range(n_rows):
-            cell = pygame.Rect(x_cor + j * cell_size, y_cor + i * cell_size, cell_size, cell_size)
+            cell = Cell(x_cor + j * cell_size, y_cor + i * cell_size)
             row.append(cell)
             pygame.draw.rect(win, black_clr, cell, 1)
         grid.append(row)
 
 
 def test():
-    pygame.draw.rect(win, black_clr, (0, 0, cell_size, cell_size), 1)
+    pass
 
 
 def init():
@@ -93,7 +100,7 @@ def run():
                 mouse_x, mouse_y = pygame.mouse.get_pos()
                 if keys[pygame.K_SPACE]:
                     # pygame.draw.circle(win, red_clr, (mouse_x, mouse_y), 3)
-                    draw_cell(Cell(mouse_x, mouse_y))
+                    activate_cell(mouse_x, mouse_y)
 
         pygame.display.update()
 
