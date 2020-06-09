@@ -36,6 +36,7 @@ def draw_cell(cell):
     if cell.state:
         x_cor = cell.x - cell_size // 2
         y_cor = cell.y - cell_size // 2
+        # find the nearest cell on the grid
         pygame.draw.rect(win, black_clr, (x_cor, y_cor, cell_size, cell_size))
 
 
@@ -44,9 +45,12 @@ def draw_grid():
     x_cor = 0
     y_cor = 0
     for j in range(n_cols):
+        row = []
         for i in range(n_rows):
-            cell = pygame.Rect(x_cor + i * cell_size, y_cor + j * cell_size, cell_size, cell_size)
-            pygame.draw.rect(win, black_clr, (x_cor + i * cell_size, y_cor + j * cell_size, cell_size, cell_size), 1)
+            cell = pygame.Rect(x_cor + j * cell_size, y_cor + i * cell_size, cell_size, cell_size)
+            row.append(cell)
+            pygame.draw.rect(win, black_clr, cell, 1)
+        grid.append(row)
 
 
 def test():
