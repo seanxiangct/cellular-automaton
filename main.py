@@ -43,8 +43,11 @@ class Point:
 def activate_cell(pix_x, pix_y):
     # find the nearest cell on the grid
     # pygame.draw.rect(win, black_clr, (x_cor, y_cor, cell_size, cell_size))
-    in_rect = utils.binary_search_2d(Point(pix_x, pix_y), grid)
-    pygame.draw.rect(win, black_clr, in_rect)
+    for row in grid:
+        for cell in row:
+            if cell.collidepoint(pix_x, pix_y):
+                pygame.draw.rect(win, black_clr, cell)
+                break
 
 
 def draw_grid():
