@@ -1,11 +1,10 @@
 import pygame
 import random
-import utils
 
 # config
 s_width, s_height = 1200, 1200
 cell_size = 10
-fps = 1
+fps = 10
 
 # colours
 red_clr = (255, 0, 0)
@@ -20,7 +19,8 @@ n_cols = s_width // cell_size
 n_rows = s_height // cell_size
 rule = []
 states = [0, 1]
-occurrence = [0.5, 0.5]
+occurrence = [0.9, 0.1]
+death_rate = 0.1
 
 # global objects
 # 2D matrix of cells
@@ -54,6 +54,8 @@ class Cell(pygame.Rect):
             self.state = 0
         elif self.state == 0 and env == 3:
             self.state = 1
+        elif random.random() < death_rate:
+            self.state = 0
         return self.state
 
 
