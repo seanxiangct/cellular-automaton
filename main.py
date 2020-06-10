@@ -18,7 +18,6 @@ win = None
 n_cols = s_width // cell_size
 n_rows = s_height // cell_size
 rule = []
-initial_state = [random.randint(0, 1) for x in range(n_cols)]
 
 # 2D matrix of cells
 grid = []
@@ -26,14 +25,23 @@ grid = []
 
 class Cell(pygame.Rect):
 
-    def __init__(self, x, y, state=1):
+    def __init__(self, x, y, state=0):
         super(Cell, self).__init__(x, y, cell_size, cell_size)
         self.x = x
         self.y = y
+        self.i_x = self.x // cell_size
+        self.i_y = self.y // cell_size
         self.state = state
 
     def get_neighbours(self):
-        pass
+        neighbours = []
+        for j in range(self.i_y - 1, self.i_y + 2):
+            for i in range(self.i_x - 1, self.i_x + 2):
+                try:
+                    neighbours.append(grid[i][j])
+                except IndexError:
+                    break
+        return neighbours
 
 
 class Point:
@@ -52,6 +60,10 @@ def activate_cell(pix_x, pix_y):
             if cell.collidepoint(pix_x, pix_y):
                 cell.state = 1
                 pygame.draw.rect(win, black_clr, cell)
+
+                # neighbours = cell.get_neighbours()
+                # for n in neighbours:
+                #     pygame.draw.rect(win, black_clr, n)
                 break
 
 
