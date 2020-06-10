@@ -32,6 +32,9 @@ class Cell(pygame.Rect):
         self.y = y
         self.state = state
 
+    def get_neighbours(self):
+        pass
+
 
 class Point:
 
@@ -42,10 +45,12 @@ class Point:
 
 def activate_cell(pix_x, pix_y):
     # find the nearest cell on the grid
-    # pygame.draw.rect(win, black_clr, (x_cor, y_cor, cell_size, cell_size))
+
+    # TODO: optimization
     for row in grid:
         for cell in row:
             if cell.collidepoint(pix_x, pix_y):
+                cell.state = 1
                 pygame.draw.rect(win, black_clr, cell)
                 break
 
