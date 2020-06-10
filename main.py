@@ -3,7 +3,7 @@ import random
 import utils
 
 # config
-s_width, s_height = 800, 800
+s_width, s_height = 1200, 1200
 cell_size = 10
 fps = 1
 
@@ -20,7 +20,7 @@ n_cols = s_width // cell_size
 n_rows = s_height // cell_size
 rule = []
 states = [0, 1]
-occurrence = [0.8, 0.2]
+occurrence = [0.5, 0.5]
 
 # global objects
 # 2D matrix of cells
@@ -125,7 +125,7 @@ def update_grid():
             new_state = cell.update(life_count)
             new_grid[cell.i_x][cell.i_y].state = new_state
             if new_state:
-                pygame.draw.rect(win, red_clr, cell)
+                pygame.draw.rect(win, green_clr, cell)
             else:
                 pygame.draw.rect(win, white_clr, cell)
     current_grid = new_grid
