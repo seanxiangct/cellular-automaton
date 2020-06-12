@@ -5,6 +5,7 @@ import random
 s_width, s_height = 1200, 1200
 cell_size = 10
 fps = 10
+rand = [True, False][1]
 
 # colours
 red_clr = (255, 0, 0)
@@ -14,13 +15,14 @@ black_clr = (0, 0, 0)
 white_clr = (255, 255, 255)
 
 # session variables
+start = False
 win = None
 n_cols = s_width // cell_size
 n_rows = s_height // cell_size
 rule = []
 states = [0, 1]
 occurrence = [0.9, 0.1]
-death_rate = 0.1
+death_rate = 0.05
 
 # global objects
 # 2D matrix of cells
@@ -74,7 +76,7 @@ def activate_cell(pix_x, pix_y, env):
         for cell in row:
             if cell.collidepoint(pix_x, pix_y):
                 cell.state = 1
-                pygame.draw.rect(win, black_clr, cell)
+                pygame.draw.rect(win, green_clr, cell)
 
                 break
 
@@ -87,11 +89,33 @@ def draw_grid():
     for j in range(n_cols):
         row = []
         for i in range(n_rows):
-            cell = Cell(x_cor + j * cell_size, y_cor + i * cell_size, random.choices(states, occurrence)[0])
+            cell = None
+            if rand:
+                cell = Cell(x_cor + j * cell_size, y_cor + i * cell_size, random.choices(states, occurrence)[0])
+            else:
+                cell = Cell(x_cor + j * cell_size, y_cor + i * cell_size, 0)
             row.append(cell)
-            pygame.draw.rect(win, black_clr, cell, 1)
+            pygame.draw.rect(win, white_clr, cell)
         grid.append(row)
     return grid
+
+
+def update_grid():
+    global current_grid
+    for row in current_grid:
+        for cell in row:
+            neighbours = cell.get_neighbours(current_grid)
+            life_count = 0
+            for n in neighbours:
+                if n.state == 1:
+                    life_count += 1
+            new_state = cell.update(life_count)
+            new_grid[cell.i_x][cell.i_y].state = new_state
+            if new_state:
+                pygame.draw.rect(win, green_clr, cell)
+            else:
+                pygame.draw.rect(win, white_clr, cell)
+    current_grid = new_grid
 
 
 def test():
@@ -115,26 +139,10 @@ def init():
     new_grid = draw_grid()
 
 
-def update_grid():
-    global current_grid
-    for row in current_grid:
-        for cell in row:
-            neighbours = cell.get_neighbours(current_grid)
-            life_count = 0
-            for n in neighbours:
-                if n.state == 1:
-                    life_count += 1
-            new_state = cell.update(life_count)
-            new_grid[cell.i_x][cell.i_y].state = new_state
-            if new_state:
-                pygame.draw.rect(win, green_clr, cell)
-            else:
-                pygame.draw.rect(win, white_clr, cell)
-    current_grid = new_grid
-
-
 def run():
 
+    global start
+    global current_grid
     while run:
 
         # print(clock.get_fps())
@@ -153,6 +161,15 @@ def run():
                 if event.key == pygame.K_ESCAPE:
                     # exit
                     return
+                if event.key == pygame.K_SPACE:
+                    start = True
+                    update_grid()
+
+                if event.key == pygame.K_BACKSPACE:
+                    # clear the screen and grid
+                    current_grid = draw_grid()
+                    start = False
+                    pass
 
             if pygame.mouse.get_focused():
                 mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -161,7 +178,8 @@ def run():
                     activate_cell(mouse_x, mouse_y, current_grid)
 
         # compute new grid based on current grid
-        update_grid()
+        if start:
+            update_grid()
 
         pygame.display.update()
 
