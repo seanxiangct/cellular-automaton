@@ -1,6 +1,8 @@
 import pygame
 import random
 
+from statics.Colours import Colours
+
 # config
 s_width, s_height = 1200, 1200
 cell_size = 10
@@ -8,11 +10,6 @@ fps = 10
 rand = [True, False][1]
 
 # colours
-red_clr = (255, 0, 0)
-green_clr = (0, 255, 0)
-blue_clr = (0, 0, 255)
-black_clr = (0, 0, 0)
-white_clr = (255, 255, 255)
 
 # session variables
 start = False
@@ -76,7 +73,7 @@ def activate_cell(pix_x, pix_y, env):
         for cell in row:
             if cell.collidepoint(pix_x, pix_y):
                 cell.state = 1
-                pygame.draw.rect(win, green_clr, cell)
+                pygame.draw.rect(win, Colours.green_clr, cell)
 
                 break
 
@@ -95,7 +92,7 @@ def draw_grid():
             else:
                 cell = Cell(x_cor + j * cell_size, y_cor + i * cell_size, 0)
             row.append(cell)
-            pygame.draw.rect(win, white_clr, cell)
+            pygame.draw.rect(win, Colours.white_clr, cell)
         grid.append(row)
     return grid
 
@@ -112,9 +109,9 @@ def update_grid():
             new_state = cell.update(life_count)
             new_grid[cell.i_x][cell.i_y].state = new_state
             if new_state:
-                pygame.draw.rect(win, green_clr, cell)
+                pygame.draw.rect(win, Colours.green_clr, cell)
             else:
-                pygame.draw.rect(win, white_clr, cell)
+                pygame.draw.rect(win, Colours.white_clr, cell)
     current_grid = new_grid
 
 
@@ -131,7 +128,7 @@ def init():
 
     # create cells based on initial state
 
-    win.fill(white_clr)
+    win.fill(Colours.white_clr)
 
     global current_grid
     global new_grid
