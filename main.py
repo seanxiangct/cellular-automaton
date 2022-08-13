@@ -1,69 +1,29 @@
 import pygame
-import random
 
-from statics.Colours import Colours
+from models.scene import Scene
+
+from statics.colours import Colours
 
 # config
-s_width, s_height = 1200, 1200
 cell_size = 10
 fps = 10
-rand = [True, False][1]
 
 # colours
 
 # session variables
 start = False
 win = None
-n_cols = s_width // cell_size
-n_rows = s_height // cell_size
+# n_cols = s_width // cell_size
+# n_rows = s_height // cell_size
 rule = []
 states = [0, 1]
 occurrence = [0.9, 0.1]
-death_rate = 0.05
 
 # global objects
 # 2D matrix of cells
 current_grid = []
 new_grid = []
 clock = None
-
-
-class Cell(pygame.Rect):
-
-    def __init__(self, x, y, state=0):
-        super(Cell, self).__init__(x, y, cell_size, cell_size)
-        self.x = x
-        self.y = y
-        self.i_x = self.x // cell_size
-        self.i_y = self.y // cell_size
-        self.state = state
-
-    def get_neighbours(self, grid):
-        neighbours = []
-        for j in range(self.i_y - 1, self.i_y + 2):
-            for i in range(self.i_x - 1, self.i_x + 2):
-                try:
-                    neighbours.append(grid[i][j])
-                except IndexError:
-                    break
-        return neighbours
-
-    def update(self, env):
-        if self.state == 1 and (env < 2 or env > 3):
-            self.state = 0
-        elif self.state == 0 and env == 3:
-            self.state = 1
-        elif random.random() < death_rate:
-            self.state = 0
-        return self.state
-
-
-class Point:
-
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-
 
 def activate_cell(pix_x, pix_y, env):
     # find the nearest cell on the grid
@@ -76,26 +36,6 @@ def activate_cell(pix_x, pix_y, env):
                 pygame.draw.rect(win, Colours.green_clr, cell)
 
                 break
-
-
-def draw_grid():
-
-    grid = []
-    x_cor = 0
-    y_cor = 0
-    for j in range(n_cols):
-        row = []
-        for i in range(n_rows):
-            cell = None
-            if rand:
-                cell = Cell(x_cor + j * cell_size, y_cor + i * cell_size, random.choices(states, occurrence)[0])
-            else:
-                cell = Cell(x_cor + j * cell_size, y_cor + i * cell_size, 0)
-            row.append(cell)
-            pygame.draw.rect(win, Colours.white_clr, cell)
-        grid.append(row)
-    return grid
-
 
 def update_grid():
     global current_grid
@@ -120,23 +60,28 @@ def test():
 
 
 def init():
-    global win
-    win = pygame.display.set_mode((s_width, s_height))
-    pygame.display.set_caption('Cellular Automata')
-    global clock
-    clock = pygame.time.Clock()
+    # global win
+    s_width, s_height = 1200, 1200
+
+    # win = pygame.display.set_mode((s_width, s_height))
+    # pygame.display.set_caption('Cellular Automata')
+    # global clock
+    # clock = pygame.time.Clock()
 
     # create cells based on initial state
 
-    win.fill(Colours.white_clr)
+    # win.fill(Colours.white_clr)
 
     global current_grid
     global new_grid
-    current_grid = draw_grid()
-    new_grid = draw_grid()
+    # current_grid = draw_grid()
+    # new_grid = draw_grid()
+    scene = Scene(s_width, s_height)
+    return scene
 
 
-def run():
+
+def run(scene: Scene):
 
     global start
     global current_grid
@@ -164,7 +109,7 @@ def run():
 
                 if event.key == pygame.K_BACKSPACE:
                     # clear the screen and grid
-                    current_grid = draw_grid()
+                    current_grid = scene.grid.draw_grid()
                     start = False
                     pass
 
