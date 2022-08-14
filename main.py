@@ -90,7 +90,7 @@ if __name__ == '__main__':
         format=logger_format,
         datefmt=logger_datefmt)
 
-    s_width, s_height = 1200, 1200
+    s_width, s_height = 1920, 1080
     scene = Scene(s_width, s_height)
     run(scene=scene)
 
