@@ -52,6 +52,13 @@ def run(scene: Scene):
                     scene.set_mode(gen_grid=False)
                     scene.grid.draw_grid()
                     continue
+                
+                if event.key == pygame.K_o:
+                    logging.info('Automatic mode')
+                    start = True
+                    scene.set_mode(gen_grid=True)
+                    scene.grid.draw_grid()
+                    continue
 
             if pygame.mouse.get_focused():
                 # if mouse is held down
