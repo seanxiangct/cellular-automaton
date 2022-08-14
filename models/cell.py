@@ -36,3 +36,6 @@ class Cell(pygame.Rect):
         elif random.random() < self.death_rate:
             self.state = 0
         return self.state
+    
+    def __str__(self) -> str:
+        return super().__str__()

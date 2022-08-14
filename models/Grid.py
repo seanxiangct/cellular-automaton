@@ -1,3 +1,4 @@
+import logging
 import random
 import pygame
 
@@ -61,11 +62,15 @@ class Grid:
         return self._grid
     
     def activate_cell(self, pix_x, pix_y):
-    # find the nearest cell on the grid
+        # find the nearest cell on the grid
+        found = False
         for row in self._grid:
             for cell in row:
                 if cell.collidepoint(pix_x, pix_y):
+                    logging.info(f'{cell} activated')
                     cell.state = 1
+                    found = True
                     pygame.draw.rect(self.display, Colours.green_clr, cell)
-
                     break
+            if found:
+                break

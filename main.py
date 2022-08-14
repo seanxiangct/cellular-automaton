@@ -1,8 +1,7 @@
+import logging
 import pygame
 
 from models.scene import Scene
-
-from statics.colours import Colours
 
 # config
 cell_size = 10
@@ -11,71 +10,9 @@ fps = 10
 # colours
 
 # session variables
-win = None
 # n_cols = s_width // cell_size
 # n_rows = s_height // cell_size
 rule = []
-
-# global objects
-# 2D matrix of cells
-# current_grid = []
-# new_grid = []
-
-# def activate_cell(pix_x, pix_y, env):
-#     # find the nearest cell on the grid
-
-#     # TODO: optimization
-#     for row in env:
-#         for cell in row:
-#             if cell.collidepoint(pix_x, pix_y):
-#                 cell.state = 1
-#                 pygame.draw.rect(win, Colours.green_clr, cell)
-
-#                 break
-
-# def update_grid():
-#     # global current_grid
-#     for row in current_grid:
-#         for cell in row:
-#             neighbours = cell.get_neighbours(current_grid)
-#             life_count = 0
-#             for n in neighbours:
-#                 if n.state == 1:
-#                     life_count += 1
-#             new_state = cell.update(life_count)
-#             new_grid[cell.i_x][cell.i_y].state = new_state
-#             if new_state:
-#                 pygame.draw.rect(win, Colours.green_clr, cell)
-#             else:
-#                 pygame.draw.rect(win, Colours.white_clr, cell)
-#     current_grid = new_grid
-
-
-def test():
-    pass
-
-
-def init(scene: Scene):
-    # global win
-    s_width, s_height = 1200, 1200
-
-    # win = pygame.display.set_mode((s_width, s_height))
-    # pygame.display.set_caption('Cellular Automata')
-    # global clock
-    # clock = pygame.time.Clock()
-
-    # create cells based on initial state
-
-    # win.fill(Colours.white_clr)
-
-    # global current_grid
-    # global new_grid
-    # current_grid = draw_grid()
-    # new_grid = draw_grid()
-    scene = Scene(s_width, s_height)
-    return scene
-
-
 def run(scene: Scene):
 
     start = False
@@ -85,8 +22,6 @@ def run(scene: Scene):
         # handles input
         # if key is held down
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_t]:
-            test()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -95,17 +30,27 @@ def run(scene: Scene):
             # if key is pressed
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
+                    logging.info('Quitting')
                     # exit
                     return
                 if event.key == pygame.K_SPACE:
                     start = True
-                    scene.grid.update_grid()
+                    if not scene.grid:
+                        scene.grid.draw_grid()
 
                 if event.key == pygame.K_BACKSPACE:
                     # clear the screen and grid
                     # current_grid = scene.grid
                     scene.grid.draw_grid()
                     start = False
+                    logging.info('Reset world')
+                    continue
+                    
+                if event.key == pygame.K_m:
+                    logging.info('Manual mode')
+                    start = False
+                    scene.set_mode(gen_grid=False)
+                    scene.grid.draw_grid()
                     continue
 
             if pygame.mouse.get_focused():
@@ -118,7 +63,10 @@ def run(scene: Scene):
 
         # compute new grid based on current grid
         if start:
+            logging.info('Starting')
             scene.grid.update_grid()
+        else:
+            logging.info('Paused')
 
         pygame.display.update()
 
@@ -128,6 +76,12 @@ def run(scene: Scene):
 if __name__ == '__main__':
 
     # init()
+    logger_format = '[%(asctime)s] %(levelname)s [%(name)s.%(funcName)s:%(lineno)d] %(message)s'
+    logger_datefmt = '%d/%b/%Y %H:%M:%S'
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format=logger_format,
+        datefmt=logger_datefmt)
 
     s_width, s_height = 1200, 1200
     scene = Scene(s_width, s_height)

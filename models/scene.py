@@ -18,3 +18,7 @@ class Scene:
         self.clock = pygame.time.Clock()
 
         self.grid = Grid(self.scene, width, height, Scene.cell_size, Scene.death_rate, Scene.gen_grid)
+    
+    def set_mode(self, gen_grid: bool):
+        self.gen_grid = gen_grid
+        self.grid.gen_grid = gen_grid
