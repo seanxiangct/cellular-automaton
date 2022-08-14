@@ -16,14 +16,11 @@ win = None
 # n_cols = s_width // cell_size
 # n_rows = s_height // cell_size
 rule = []
-states = [0, 1]
-occurrence = [0.9, 0.1]
 
 # global objects
 # 2D matrix of cells
-current_grid = []
-new_grid = []
-clock = None
+# current_grid = []
+# new_grid = []
 
 def activate_cell(pix_x, pix_y, env):
     # find the nearest cell on the grid
@@ -59,7 +56,7 @@ def test():
     pass
 
 
-def init():
+def init(scene: Scene):
     # global win
     s_width, s_height = 1200, 1200
 
@@ -114,8 +111,10 @@ def run(scene: Scene):
                     pass
 
             if pygame.mouse.get_focused():
+                # if mouse is held down
+                # activate the cell under the mouse
                 mouse_x, mouse_y = pygame.mouse.get_pos()
-                left, right, middle = pygame.mouse.get_pressed()
+                left, _, _ = pygame.mouse.get_pressed()
                 if left:
                     activate_cell(mouse_x, mouse_y, current_grid)
 
@@ -125,12 +124,15 @@ def run(scene: Scene):
 
         pygame.display.update()
 
-        clock.tick(fps)
+        scene.clock.tick(fps)
 
 
 if __name__ == '__main__':
 
-    init()
+    # init()
 
-    run()
+    s_width, s_height = 1200, 1200
+    scene = Scene(s_width, s_height)
+    scene.grid.draw_grid()
+    run(scene=scene)
 

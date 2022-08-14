@@ -4,7 +4,7 @@ import pygame
 class Cell(pygame.Rect):
 
     def __init__(self, x, y, cell_size, death_rate=0.05, state=0):
-        super(Cell, self).__init__(x, y, cell_size, cell_size)
+        super().__init__(x, y, cell_size, cell_size)
         self.x = x
         self.y = y
         self.i_x = self.x // cell_size
